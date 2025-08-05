@@ -91,6 +91,17 @@
   </div>
 </div>
 
+<!-- ✅ JavaScript at bottom to prevent double submission -->
+<script>
+  const form = document.querySelector("form");
+  const button = document.querySelector(".add-btn");
+
+  form.addEventListener("submit", () => {
+    button.disabled = true;
+    button.innerText = "Submitting...";
+  });
+</script>
+
 <!-- pricem me type:number tha -->
 <!-- <% layout ("layouts/boilerplate") %>
 <body>
