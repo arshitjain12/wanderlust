@@ -28,25 +28,51 @@ module.exports.showListing = async(req,res)=>{
 };
 
 
-module.exports.createListing = async(req, res, next)=>{
-    let url = req.file.path;
-    let filename = req.file.filename;
-      // let {title ,description, image, price, country,location } = req.body;
-        // let result = listingSchema.validate(req.body);
-        // console.log(result);
-        // if(result.error){
-        //     throw new ExpressError(400,result.error);
-        // }
+module.exports.createListing = async (req, res, next) => {
+  let url = req.file.path;
+  let filename = req.file.filename;
 
-        const newListing = new Listing(req.body.listing);
-        // Form se listing ka data liya, naya document banaya aur DB me save kiya
-        newListing.owner = req.user._id;
-        newListing.image ={url,filename}; 
+  // ✅ Prevent duplicate listing by same user with same title
+  const existing = await Listing.findOne({
+    title: req.body.listing.title,
+    owner: req.user._id,
+  });
 
-        await newListing.save();
-        req.flash("success","new listing created");
-         res.redirect("/listings")
+  if (existing) {
+    req.flash("error", "Duplicate listing detected. Not created again.");
+    return res.redirect("/listings");
+  }
+
+  const newListing = new Listing(req.body.listing);
+  newListing.owner = req.user._id;
+  newListing.image = { url, filename };
+
+  await newListing.save();
+  req.flash("success", "New listing created");
+  res.redirect("/listings");
 };
+
+
+
+// module.exports.createListing = async(req, res, next)=>{
+//     let url = req.file.path;
+//     let filename = req.file.filename;
+//       // let {title ,description, image, price, country,location } = req.body;
+//         // let result = listingSchema.validate(req.body);
+//         // console.log(result);
+//         // if(result.error){
+//         //     throw new ExpressError(400,result.error);
+//         // }
+
+//         const newListing = new Listing(req.body.listing);
+//         // Form se listing ka data liya, naya document banaya aur DB me save kiya
+//         newListing.owner = req.user._id;
+//         newListing.image ={url,filename}; 
+
+//         await newListing.save();
+//         req.flash("success","new listing created");
+//          res.redirect("/listings")
+// };
 
 module.exports.renderEditForm = async (req, res)=>{
            let {id} = req.params;
