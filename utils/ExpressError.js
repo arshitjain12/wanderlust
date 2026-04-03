@@ -7,10 +7,10 @@
 // }
 // module.exports = ExpressError;
 
-class ExpressError extends Error{
-    constructor(StatusCode, message){
+class ExpressError extends Error {
+    constructor(statusCode, message) { // Use lowercase 's'
         super();
-        this.StatusCode = StatusCode;
+        this.statusCode = statusCode;  // Use lowercase 's'
         this.message = message;
     }
 }

@@ -19,6 +19,7 @@ const User = require("./models/user.js");
 const listingRouter= require("./routes/listing.js");
 const reviewRouter =   require("./routes/review.js");
 const userRouter =   require("./routes/user.js");
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // const MONGO_URL =  "mongodb://localhost:27017/wanderlust";
 const dbUrl = process.env.ATLASDB_URL;
